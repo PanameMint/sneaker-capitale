@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} — {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+
+  <header class="masthead" style="background-image: url('{{ '/assets/img/hero.jpg' | relative_url }}');">
+    <div class="wrap masthead-nav">
+      <a class="mark" href="{{ '/' | relative_url }}">SC</a>
+      <ul>
+        <li><a href="{{ '/' | relative_url }}">Home</a></li>
+        <li><a href="{{ '/about/' | relative_url }}">About</a></li>
+      </ul>
+    </div>
+
+    <div class="wrap masthead-body">
+      <p class="eyebrow">Australian Sneaker News</p>
+      <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
+      <p class="tagline">{{ site.description }}</p>
+    </div>
+
+    <div class="wrap masthead-foot">
+      <span>{{ site.time | date: '%Y' }}</span>
+      <span class="sc-mark">Sneaker <span>Capitale</span></span>
+    </div>
+  </header>
+
+  <main>
+    {{ content }}
+  </main>
+
+  <footer>
+    <div class="wrap">
+      &copy; {{ site.time | date: '%Y' }} {{ site.title }}. Some links on this site are affiliate links.
+    </div>
+  </footer>
+
+</body>
+</html>
