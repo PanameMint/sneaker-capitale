@@ -29,11 +29,59 @@ a { color: var(--ink); text-decoration: none; }
   padding: 0 24px;
 }
 
-/* Masthead */
+/* Masthead / Hero */
 .masthead {
-  background: var(--ink);
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--ink) center/cover no-repeat;
   color: #fff;
-  padding: 64px 0 48px;
+  overflow: hidden;
+}
+.masthead::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.9) 100%);
+  pointer-events: none;
+}
+.masthead .wrap { position: relative; z-index: 1; }
+
+.masthead-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0 0;
+}
+.masthead-nav .mark {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #fff;
+}
+.masthead-nav .mark span { color: var(--flame); }
+.masthead-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+}
+.masthead-nav a {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #fff;
+}
+.masthead-nav a:hover { color: var(--flame); }
+
+.masthead-body {
+  padding: 40px 0 32px;
 }
 .masthead .eyebrow {
   font-family: 'Oswald', sans-serif;
@@ -47,8 +95,8 @@ a { color: var(--ink); text-decoration: none; }
 .masthead h1 {
   font-family: 'Oswald', sans-serif;
   font-weight: 700;
-  font-size: clamp(48px, 9vw, 96px);
-  line-height: 0.95;
+  font-size: clamp(56px, 11vw, 128px);
+  line-height: 0.9;
   letter-spacing: -1px;
   margin: 0;
   text-transform: uppercase;
@@ -57,20 +105,28 @@ a { color: var(--ink); text-decoration: none; }
 .masthead .tagline {
   margin: 16px 0 0;
   font-size: 15px;
-  color: #a8a8a8;
+  color: #d8d8d8;
   max-width: 40ch;
 }
-.masthead nav { margin-top: 28px; }
-.masthead nav a {
+
+.masthead-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 24px;
   font-family: 'Oswald', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: #fff;
-  border-bottom: 2px solid var(--flame);
-  padding-bottom: 2px;
+  color: #c8c8c8;
 }
+.masthead-foot .sc-mark {
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 6px 12px;
+  color: #fff;
+}
+.masthead-foot .sc-mark span { color: var(--flame); }
 
 /* Post grid */
 .grid {
