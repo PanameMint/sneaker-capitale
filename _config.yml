@@ -3,9 +3,10 @@ description: Australian sneaker news, release dates, and drops.
 markdown: kramdown
 permalink: /:year/:month/:day/:title/
 
-# Update this once you buy your domain, e.g. sneakercapitale.com.au
-url: ""
-baseurl: ""
+# Update url once you buy your domain, e.g. https://sneakercapitale.com.au
+# Once you're on a custom domain, set baseurl back to "" (custom domains serve from root)
+url: "https://panamemint.github.io"
+baseurl: "/sneaker-capitale"
 
 plugins:
   - jekyll-feed
