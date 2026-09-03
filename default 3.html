@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} — {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+
+  <header class="masthead" style="background-image: url('{{ '/assets/img/hero.jpg' | relative_url }}');">
+
+    <div class="hero-wrap masthead-top">
+      <a class="mark" href="{{ '/' | relative_url }}">SC</a>
+    </div>
+
+    <div class="hero-wrap masthead-mid">
+      <div class="masthead-nav-row">
+        <nav class="masthead-side">
+          <ul>
+            <li><a href="{{ '/about/' | relative_url }}">About</a></li>
+            <li><a href="{{ '/news/' | relative_url }}">Sneaker News</a></li>
+            <li><a href="{{ '/release-dates/' | relative_url }}">Release Dates</a></li>
+            <li><a href="{{ '/deals/' | relative_url }}">Hot Deals</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="masthead-bottom">
+        <h1><a href="{{ '/' | relative_url }}">Sneaker<br>Capitale</a></h1>
+      </div>
+    </div>
+
+    <div class="hero-wrap masthead-foot">
+      <span>// {{ site.time | date: '%Y' }}</span>
+    </div>
+  </header>
+
+  <main>
+    {{ content }}
+  </main>
+
+  <footer>
+    <div class="wrap">
+      &copy; {{ site.time | date: '%Y' }} {{ site.title }}. Some links on this site are affiliate links.
+    </div>
+  </footer>
+
+</body>
+</html>
