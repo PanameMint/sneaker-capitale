@@ -2,17 +2,16 @@
 layout: default
 ---
 
+<div class="wrap">
 {{ content }}
 
-<ul class="manifest">
+<ul class="grid">
   {% for post in site.posts %}
   <li>
-    <span class="date">{{ post.date | date: "%d.%m.%y" }}</span>
-    <div>
-      <div class="title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></div>
-      {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncatewords: 24 }}</p>{% endif %}
-    </div>
-    <span class="tag">{{ post.categories | first }}</span>
+    <div class="meta">{{ post.categories | first }}<span class="date">{{ post.date | date: "%d.%m.%y" }}</span></div>
+    <div class="title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></div>
+    {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncatewords: 20 }}</p>{% endif %}
   </li>
   {% endfor %}
 </ul>
+</div>

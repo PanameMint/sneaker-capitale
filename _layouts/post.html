@@ -2,16 +2,16 @@
 layout: default
 ---
 
-<article>
-  <div class="post-header">
-    <div class="post-meta">
-      <span class="tag">{{ page.categories | first }}</span> &nbsp; {{ page.date | date: "%-d %B %Y" }}
-    </div>
+<div class="post-header">
+  <div class="wrap">
+    <div class="post-meta">{{ page.categories | first }}<span class="sep">/</span>{{ page.date | date: "%-d %B %Y" }}</div>
     <h1>{{ page.title }}</h1>
   </div>
-  <div class="post-content">
-    {{ content }}
-  </div>
-</article>
+</div>
 
-<a class="back-link" href="{{ '/' | relative_url }}">&larr; Back to all posts</a>
+<div class="wrap">
+  <article class="post-content">
+    {{ content }}
+  </article>
+  <a class="back-link" href="{{ '/' | relative_url }}">&larr; All posts</a>
+</div>

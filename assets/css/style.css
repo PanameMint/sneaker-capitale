@@ -1,16 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
-  --paper: #EFE7D6;
-  --paper-dark: #E3D8BE;
-  --ink: #17140F;
-  --line: #C7B99A;
-  --flame: #FF5722;
-  --cobalt: #1B3C8C;
+  --ink: #0D0D0D;
+  --paper: #FFFFFF;
+  --line: #E3E3E3;
+  --line-dark: #2A2A2A;
+  --flame: #FF2A1E;
+  --muted: #6E6E6E;
 }
 
 * { box-sizing: border-box; }
-
 html { -webkit-font-smoothing: antialiased; }
 
 body {
@@ -18,125 +17,157 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: 'Inter', -apple-system, sans-serif;
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.55;
 }
 
-a { color: var(--cobalt); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a { color: var(--ink); text-decoration: none; }
 
 .wrap {
-  max-width: 720px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
 /* Masthead */
 .masthead {
-  border-bottom: 4px solid var(--ink);
-  padding: 36px 0 20px;
+  background: var(--ink);
+  color: #fff;
+  padding: 64px 0 48px;
 }
-.masthead .wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.masthead h1 {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 34px;
-  margin: 0;
-  letter-spacing: -0.5px;
-}
-.masthead h1 a { color: var(--ink); }
-.masthead nav a {
-  color: var(--ink);
-  font-weight: 600;
-  font-size: 15px;
-  margin-left: 18px;
-}
-.tagline {
-  margin: 6px 0 0;
-  font-size: 15px;
-  color: #4a4638;
-}
-
-/* Post manifest list */
-.manifest { margin: 0; padding: 0; list-style: none; }
-.manifest li {
-  display: grid;
-  grid-template-columns: 90px 1fr auto;
-  gap: 16px;
-  align-items: baseline;
-  padding: 22px 0;
-  border-bottom: 1px solid var(--line);
-}
-.manifest .date {
-  font-size: 13px;
-  color: #6b6553;
-  font-variant-numeric: tabular-nums;
-}
-.manifest .title {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 20px;
-  font-weight: normal;
-  line-height: 1.25;
-}
-.manifest .title a { color: var(--ink); }
-.manifest .title a:hover { color: var(--flame); text-decoration: none; }
-.manifest .tag {
+.masthead .eyebrow {
+  font-family: 'Oswald', sans-serif;
   font-size: 12px;
   font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   color: var(--flame);
-  white-space: nowrap;
-  align-self: start;
+  margin: 0 0 12px;
 }
-.manifest .excerpt {
-  grid-column: 2 / span 2;
+.masthead h1 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(48px, 9vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -1px;
+  margin: 0;
+  text-transform: uppercase;
+}
+.masthead h1 a { color: #fff; }
+.masthead .tagline {
+  margin: 16px 0 0;
   font-size: 15px;
-  color: #3a362b;
-  margin-top: 4px;
+  color: #a8a8a8;
+  max-width: 40ch;
+}
+.masthead nav { margin-top: 28px; }
+.masthead nav a {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #fff;
+  border-bottom: 2px solid var(--flame);
+  padding-bottom: 2px;
+}
+
+/* Post grid */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.grid li {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 32px;
+}
+.grid .meta {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--flame);
+  margin-bottom: 14px;
+}
+.grid .meta .date { color: var(--muted); margin-left: 10px; }
+.grid .title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+.grid .title a:hover { color: var(--flame); }
+.grid .excerpt {
+  font-size: 14.5px;
+  color: var(--muted);
+  margin: 0;
 }
 
 /* Single post */
 .post-header {
-  padding: 40px 0 20px;
-  border-bottom: 2px solid var(--ink);
+  background: var(--ink);
+  color: #fff;
+  padding: 56px 0 40px;
 }
 .post-meta {
-  font-size: 13px;
-  color: #6b6553;
-  margin-bottom: 10px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--flame);
+  margin-bottom: 16px;
 }
-.post-meta .tag { color: var(--flame); font-weight: 600; }
+.post-meta .sep { color: #555; margin: 0 8px; }
 .post-header h1 {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 32px;
-  line-height: 1.15;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(32px, 6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.5px;
   margin: 0;
+  text-transform: uppercase;
+  color: #fff;
 }
-.post-content { padding: 28px 0 60px; max-width: 66ch; }
+.post-content { padding: 40px 0 64px; max-width: 66ch; }
 .post-content p { margin: 0 0 18px; }
 .post-content strong { color: var(--ink); }
-.post-content em { color: #4a4638; }
+.post-content em { color: var(--muted); }
 .back-link {
   display: inline-block;
-  margin: 32px 0 0;
+  margin: 0 0 40px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
   font-weight: 600;
-  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--flame);
+  padding-bottom: 2px;
 }
+
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+}
+.page p { color: var(--muted); }
 
 footer {
-  border-top: 4px solid var(--ink);
-  padding: 24px 0 40px;
+  border-top: 1px solid var(--line);
+  padding: 24px 0 48px;
   font-size: 13px;
-  color: #6b6553;
+  color: var(--muted);
 }
 
-@media (max-width: 560px) {
-  .masthead h1 { font-size: 26px; }
-  .manifest li { grid-template-columns: 1fr auto; }
-  .manifest .date { grid-column: 1 / span 2; order: -1; }
-  .post-header h1 { font-size: 26px; }
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+  .masthead { padding: 48px 0 36px; }
 }
