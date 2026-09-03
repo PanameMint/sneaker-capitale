@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sneaker Capitale — Admin</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ink: #0D0D0D; --paper: #FFFFFF; --line: #E3E3E3; --line-dark: #2A2A2A;
+    --flame: #FF2A1E; --muted: #6E6E6E; --panel: #F7F6F3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--panel); color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; line-height: 1.5;
+  }
+  header {
+    background: var(--ink); color: #fff; padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header .mark { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 1px; }
+  header .mark span { color: var(--flame); }
+  header nav { display: flex; gap: 4px; }
+  header nav button {
+    background: none; border: none; color: #aaa; font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 500; padding: 8px 14px; border-radius: 5px; cursor: pointer;
+  }
+  header nav button.active { background: #1a1a1a; color: #fff; }
+  header .conn-status { font-size: 12px; color: #6E6E6E; }
+  header .conn-status.ok { color: #8FD19E; }
+  main { max-width: 900px; margin: 0 auto; padding: 24px; }
+  .card {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 8px;
+    padding: 20px 24px; margin-bottom: 20px;
+  }
+  .card h2 {
+    font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 600;
+    letter-spacing: 0.5px; text-transform: uppercase; margin: 0 0 16px; color: var(--ink);
+  }
+  label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin: 14px 0 5px; }
+  label:first-child { margin-top: 0; }
+  input[type=text], input[type=password], input[type=date], input[type=number], textarea, select {
+    width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 5px;
+    font-family: inherit; font-size: 14px; background: #fff; color: var(--ink);
+  }
+  textarea { resize: vertical; min-height: 90px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .row3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; }
+  button.btn {
+    font-family: 'Oswald', sans-serif; font-weight: 500; font-size: 13px;
+    letter-spacing: 0.5px; text-transform: uppercase; padding: 10px 18px;
+    border-radius: 5px; border: 1px solid var(--line-dark); background: var(--ink);
+    color: #fff; cursor: pointer;
+  }
+  button.btn:hover { background: #1a1a1a; }
+  button.btn.primary { background: var(--flame); border-color: var(--flame); }
+  button.btn.ghost { background: none; color: var(--ink); border-color: var(--line); }
+  button.btn.small { padding: 6px 12px; font-size: 11px; }
+  button.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .retailer-row { display: grid; grid-template-columns: 1.4fr 2fr 1fr auto; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .retailer-row input { margin: 0; }
+  .retailer-row .rm { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 4px 8px; }
+  .photo-drop {
+    border: 2px dashed var(--line); border-radius: 6px; padding: 24px;
+    text-align: center; color: var(--muted); cursor: pointer; font-size: 13px;
+  }
+  .photo-drop.drag { border-color: var(--flame); color: var(--flame); }
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; margin-top: 12px; }
+  .photo-item { position: relative; aspect-ratio: 1/1; border-radius: 5px; overflow: hidden; background: var(--line); }
+  .photo-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-item .rm {
+    position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(0,0,0,0.65); color: #fff; border: none; cursor: pointer; font-size: 12px; line-height: 1;
+  }
+  .photo-item .alt-input {
+    position: absolute; bottom: 0; left: 0; right: 0; font-size: 10px; padding: 3px 5px;
+    border: none; background: rgba(0,0,0,0.55); color: #fff; border-radius: 0;
+  }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .msg { padding: 10px 14px; border-radius: 5px; font-size: 13px; margin-bottom: 16px; }
+  .msg.err { background: #FCEBEB; color: #791F1F; }
+  .msg.ok { background: #EAF3DE; color: #27500A; }
+  .post-list-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+  }
+  .post-list-item:last-child { border-bottom: none; }
+  .post-list-item .t { font-weight: 500; }
+  .post-list-item .d { color: var(--muted); font-size: 12px; }
+  .post-list-item .actions { display: flex; gap: 8px; }
+  .view { display: none; }
+  .view.active { display: block; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mark">SNEAKER<span>CAPITALE</span> ADMIN</div>
+  <nav>
+    <button id="nav-new" class="active">New post</button>
+    <button id="nav-manage">Manage posts</button>
+    <button id="nav-settings">Settings</button>
+  </nav>
+  <div class="conn-status" id="conn-status">Not connected</div>
+</header>
+
+<main>
+
+  <div id="msg-area"></div>
+
+  <!-- SETTINGS VIEW -->
+  <div class="view" id="view-settings">
+    <div class="card">
+      <h2>GitHub connection</h2>
+      <p class="hint">Create a fine-grained personal access token at github.com/settings/tokens with read/write access to Contents on this one repo only. It's stored in this browser's local storage and only ever sent to api.github.com — never to any other server.</p>
+      <label>Repo owner</label>
+      <input type="text" id="set-owner" value="panamemint">
+      <label>Repo name</label>
+      <input type="text" id="set-repo" value="sneaker-capitale">
+      <label>Branch</label>
+      <input type="text" id="set-branch" value="main">
+      <label>Personal access token</label>
+      <input type="password" id="set-token" placeholder="github_pat_...">
+      <div style="margin-top:16px; display:flex; gap:10px;">
+        <button class="btn primary" id="btn-connect">Connect</button>
+        <button class="btn ghost" id="btn-disconnect">Disconnect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW / EDIT POST VIEW -->
+  <div class="view active" id="view-new">
+    <div class="card">
+      <h2 id="form-heading">New release post</h2>
+      <input type="hidden" id="edit-sha">
+      <input type="hidden" id="edit-path">
+
+      <label>Title</label>
+      <input type="text" id="f-title" placeholder='Air Jordan 4 "Tour Yellow" — Australian Release Date'>
+
+      <div class="row">
+        <div>
+          <label>Category</label>
+          <select id="f-category">
+            <option value="release-dates">release-dates</option>
+            <option value="news">news</option>
+          </select>
+        </div>
+        <div>
+          <label>Tags (comma separated)</label>
+          <input type="text" id="f-tags" placeholder="jordan, nike">
+        </div>
+      </div>
+
+      <div class="row3">
+        <div>
+          <label>SKU</label>
+          <input type="text" id="f-sku" placeholder="IO2463-102">
+        </div>
+        <div>
+          <label>Price</label>
+          <input type="text" id="f-price" placeholder="$260 AUD">
+        </div>
+        <div>
+          <label>Post date</label>
+          <input type="date" id="f-date">
+        </div>
+      </div>
+
+      <label>Release date (as displayed, e.g. "5 September 2026" or "TBC")</label>
+      <input type="text" id="f-release-date" placeholder="5 September 2026">
+
+      <label>Body</label>
+      <textarea id="f-body" placeholder="Paste the drafted copy here (hook, context, look, what's new paragraphs)."></textarea>
+      <p class="hint">Plain text / Markdown. Blank lines become paragraph breaks. Photos and buy links go in the sections below, not in this box.</p>
+    </div>
+
+    <div class="card">
+      <h2>Photos</h2>
+      <div class="photo-drop" id="photo-drop">Drop photos here or click to choose files</div>
+      <input type="file" id="photo-input" accept="image/*" multiple style="display:none">
+      <div class="photo-grid" id="photo-grid"></div>
+      <p class="hint">First photo is the hero image. Add a short alt-text caption under each thumbnail.</p>
+    </div>
+
+    <div class="card">
+      <h2>Where to buy</h2>
+      <div id="retailer-list"></div>
+      <button class="btn ghost small" id="btn-add-retailer" type="button">+ Add retailer</button>
+    </div>
+
+    <div style="display:flex; gap:10px; align-items:center;">
+      <button class="btn primary" id="btn-publish">Publish to site</button>
+      <button class="btn ghost" id="btn-reset">Clear form</button>
+      <span id="publish-status" class="hint"></span>
+    </div>
+  </div>
+
+  <!-- MANAGE VIEW -->
+  <div class="view" id="view-manage">
+    <div class="card">
+      <h2>Existing posts</h2>
+      <button class="btn ghost small" id="btn-refresh-posts" type="button">Refresh</button>
+      <div id="post-list" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const FIXED_RETAILERS = ['Supply Store', 'Up There', 'Finesse'];
+let state = { owner: '', repo: '', branch: 'main', token: '', photos: [] };
+
+function loadSettings() {
+  const s = JSON.parse(localStorage.getItem('sc_admin_settings') || '{}');
+  state.owner = s.owner || 'panamemint';
+  state.repo = s.repo || 'sneaker-capitale';
+  state.branch = s.branch || 'main';
+  state.token = s.token || '';
+  document.getElementById('set-owner').value = state.owner;
+  document.getElementById('set-repo').value = state.repo;
+  document.getElementById('set-branch').value = state.branch;
+  document.getElementById('set-token').value = state.token;
+  updateConnStatus();
+}
+function saveSettings() {
+  state.owner = document.getElementById('set-owner').value.trim();
+  state.repo = document.getElementById('set-repo').value.trim();
+  state.branch = document.getElementById('set-branch').value.trim() || 'main';
+  state.token = document.getElementById('set-token').value.trim();
+  localStorage.setItem('sc_admin_settings', JSON.stringify(state));
+  updateConnStatus();
+}
+function updateConnStatus() {
+  const el = document.getElementById('conn-status');
+  if (state.token && state.owner && state.repo) {
+    el.textContent = 'Connected — ' + state.owner + '/' + state.repo;
+    el.classList.add('ok');
+  } else {
+    el.textContent = 'Not connected';
+    el.classList.remove('ok');
+  }
+}
+document.getElementById('btn-connect').onclick = () => { saveSettings(); showMsg('ok', 'Connected.'); };
+document.getElementById('btn-disconnect').onclick = () => {
+  localStorage.removeItem('sc_admin_settings');
+  state = { owner: '', repo: '', branch: 'main', token: '', photos: [] };
+  document.getElementById('set-token').value = '';
+  updateConnStatus();
+  showMsg('ok', 'Disconnected. Token cleared from this browser.');
+};
+
+function showMsg(type, text) {
+  const area = document.getElementById('msg-area');
+  area.innerHTML = '<div class="msg ' + (type === 'err' ? 'err' : 'ok') + '">' + text + '</div>';
+  setTimeout(() => { area.innerHTML = ''; }, 6000);
+}
+
+// Nav
+function setView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('header nav button').forEach(b => b.classList.remove('active'));
+}
+document.getElementById('nav-new').onclick = () => { setView('view-new'); document.getElementById('nav-new').classList.add('active'); };
+document.getElementById('nav-manage').onclick = () => { setView('view-manage'); document.getElementById('nav-manage').classList.add('active'); refreshPostList(); };
+document.getElementById('nav-settings').onclick = () => { setView('view-settings'); document.getElementById('nav-settings').classList.add('active'); };
+
+// Retailers
+function addRetailerRow(name = '', url = '', status = 'Releasing', fixed = false) {
+  const list = document.getElementById('retailer-list');
+  const row = document.createElement('div');
+  row.className = 'retailer-row';
+  row.innerHTML =
+    '<input type="text" class="r-name" placeholder="Retailer name" value="' + escapeAttr(name) + '">' +
+    '<input type="text" class="r-url" placeholder="https://..." value="' + escapeAttr(url) + '">' +
+    '<input type="text" class="r-status" placeholder="Releasing / In stock" value="' + escapeAttr(status) + '">' +
+    '<button type="button" class="rm" title="Remove">&times;</button>';
+  row.querySelector('.rm').onclick = () => row.remove();
+  list.appendChild(row);
+}
+document.getElementById('btn-add-retailer').onclick = () => addRetailerRow();
+
+function resetRetailers() {
+  document.getElementById('retailer-list').innerHTML = '';
+  FIXED_RETAILERS.forEach(name => addRetailerRow(name, '', 'Releasing'));
+}
+
+// Photos
+const photoDrop = document.getElementById('photo-drop');
+const photoInput = document.getElementById('photo-input');
+photoDrop.onclick = () => photoInput.click();
+['dragover', 'dragenter'].forEach(ev => photoDrop.addEventListener(ev, e => { e.preventDefault(); photoDrop.classList.add('drag'); }));
+['dragleave', 'drop'].forEach(ev => photoDrop.addEventListener(ev, e => { e.preventDefault(); photoDrop.classList.remove('drag'); }));
+photoDrop.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+photoInput.addEventListener('change', e => handleFiles(e.target.files));
+
+function handleFiles(fileList) {
+  Array.from(fileList).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      state.photos.push({ file, name: file.name, dataUrl: reader.result, alt: '', existingPath: null });
+      renderPhotoGrid();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function renderPhotoGrid() {
+  const grid = document.getElementById('photo-grid');
+  grid.innerHTML = '';
+  state.photos.forEach((p, i) => {
+    const item = document.createElement('div');
+    item.className = 'photo-item';
+    item.innerHTML =
+      '<img src="' + p.dataUrl + '">' +
+      '<button class="rm" data-i="' + i + '">&times;</button>' +
+      '<input class="alt-input" placeholder="alt text" value="' + escapeAttr(p.alt) + '" data-i="' + i + '">';
+    grid.appendChild(item);
+  });
+  grid.querySelectorAll('.rm').forEach(btn => btn.onclick = () => { state.photos.splice(+btn.dataset.i, 1); renderPhotoGrid(); });
+  grid.querySelectorAll('.alt-input').forEach(inp => inp.oninput = () => { state.photos[+inp.dataset.i].alt = inp.value; });
+}
+
+function escapeAttr(s) { return (s || '').replace(/"/g, '&quot;'); }
+function slugify(s) {
+  return s.toLowerCase()
+    .replace(/['"]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+function yamlEscape(s) { return '"' + String(s || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"'; }
+
+// GitHub API helpers
+function ghHeaders() {
+  return { 'Authorization': 'Bearer ' + state.token, 'Accept': 'application/vnd.github+json' };
+}
+async function ghGetFile(path) {
+  const url = 'https://api.github.com/repos/' + state.owner + '/' + state.repo + '/contents/' + path + '?ref=' + state.branch;
+  const res = await fetch(url, { headers: ghHeaders() });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error('GitHub error ' + res.status + ' reading ' + path);
+  return res.json();
+}
+async function ghPutFile(path, contentBase64, message, sha) {
+  const url = 'https://api.github.com/repos/' + state.owner + '/' + state.repo + '/contents/' + path;
+  const body = { message, content: contentBase64, branch: state.branch };
+  if (sha) body.sha = sha;
+  const res = await fetch(url, { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  if (!res.ok) { const t = await res.text(); throw new Error('GitHub error ' + res.status + ': ' + t); }
+  return res.json();
+}
+async function ghDeleteFile(path, sha, message) {
+  const url = 'https://api.github.com/repos/' + state.owner + '/' + state.repo + '/contents/' + path;
+  const res = await fetch(url, { method: 'DELETE', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sha, branch: state.branch }) });
+  if (!res.ok) throw new Error('GitHub error ' + res.status);
+  return res.json();
+}
+function toBase64(dataUrl) { return dataUrl.split(',')[1]; }
+
+// Publish
+document.getElementById('btn-publish').onclick = async () => {
+  if (!state.token) { showMsg('err', 'Connect a GitHub token in Settings first.'); return; }
+  const title = document.getElementById('f-title').value.trim();
+  const category = document.getElementById('f-category').value;
+  const tags = document.getElementById('f-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+  const sku = document.getElementById('f-sku').value.trim();
+  const price = document.getElementById('f-price').value.trim();
+  const dateVal = document.getElementById('f-date').value || new Date().toISOString().slice(0, 10);
+  const releaseDate = document.getElementById('f-release-date').value.trim();
+  const body = document.getElementById('f-body').value.trim();
+  const retailerRows = Array.from(document.querySelectorAll('.retailer-row')).map(r => ({
+    name: r.querySelector('.r-name').value.trim(),
+    url: r.querySelector('.r-url').value.trim(),
+    status: r.querySelector('.r-status').value.trim()
+  })).filter(r => r.name);
+
+  if (!title) { showMsg('err', 'Title is required.'); return; }
+
+  const slug = slugify(title.replace(/[""]/g, "'"));
+  const postPath = '_posts/' + dateVal + '-' + slug + '.md';
+  const existingSha = document.getElementById('edit-sha').value || null;
+  const existingPath = document.getElementById('edit-path').value || null;
+
+  const statusEl = document.getElementById('publish-status');
+  statusEl.textContent = 'Uploading photos...';
+
+  try {
+    const galleryEntries = [];
+    for (let i = 0; i < state.photos.length; i++) {
+      const p = state.photos[i];
+      if (p.existingPath) { galleryEntries.push({ image: p.existingPath, alt: p.alt }); continue; }
+      const ext = (p.name.split('.').pop() || 'jpg').toLowerCase();
+      const imgPath = 'assets/img/posts/' + slug + '/' + (i + 1) + '.' + ext;
+      await ghPutFile(imgPath, toBase64(p.dataUrl), 'Add photo for ' + title);
+      galleryEntries.push({ image: '/' + imgPath, alt: p.alt });
+    }
+
+    statusEl.textContent = 'Writing post...';
+
+    let front = '---\nlayout: post\ntitle: ' + yamlEscape(title) + '\ndate: ' + dateVal + '\ncategories: [' + category + ']\n';
+    if (tags.length) front += 'tags: [' + tags.join(', ') + ']\n';
+    if (sku) front += 'sku: ' + yamlEscape(sku) + '\n';
+    if (price) front += 'price: ' + yamlEscape(price) + '\n';
+    if (releaseDate) front += 'release_date: ' + yamlEscape(releaseDate) + '\n';
+    if (galleryEntries.length) {
+      front += 'gallery:\n';
+      galleryEntries.forEach(g => { front += '  - image: ' + yamlEscape(g.image) + '\n    alt: ' + yamlEscape(g.alt) + '\n'; });
+    }
+    if (retailerRows.length) {
+      front += 'buy_links:\n';
+      retailerRows.forEach(r => {
+        front += '  - name: ' + yamlEscape(r.name) + '\n    url: ' + yamlEscape(r.url) + '\n';
+        if (r.status) front += '    status: ' + yamlEscape(r.status) + '\n';
+      });
+    }
+    front += '---\n\n';
+
+    const disclaimer = '\n\n*This post may contain affiliate links. If you buy through one, Sneaker Capitale may earn a small commission at no extra cost to you.*\n';
+    const fullContent = front + body + disclaimer;
+    const contentB64 = btoa(unescape(encodeURIComponent(fullContent)));
+
+    if (existingPath && existingPath !== postPath) {
+      // slug/date changed on an edit — write new file, delete old one
+      await ghPutFile(postPath, contentB64, 'Update post: ' + title);
+      const oldFile = await ghGetFile(existingPath);
+      if (oldFile) await ghDeleteFile(existingPath, oldFile.sha, 'Remove superseded post file for: ' + title);
+    } else {
+      await ghPutFile(postPath, contentB64, existingSha ? ('Update post: ' + title) : ('Add post: ' + title), existingSha || undefined);
+    }
+
+    statusEl.textContent = '';
+    showMsg('ok', 'Published. GitHub Pages will rebuild in about a minute.');
+    resetForm();
+  } catch (err) {
+    statusEl.textContent = '';
+    showMsg('err', 'Failed: ' + err.message);
+  }
+};
+
+function resetForm() {
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-tags').value = '';
+  document.getElementById('f-sku').value = '';
+  document.getElementById('f-price').value = '';
+  document.getElementById('f-date').value = '';
+  document.getElementById('f-release-date').value = '';
+  document.getElementById('f-body').value = '';
+  document.getElementById('edit-sha').value = '';
+  document.getElementById('edit-path').value = '';
+  document.getElementById('form-heading').textContent = 'New release post';
+  state.photos = [];
+  renderPhotoGrid();
+  resetRetailers();
+}
+document.getElementById('btn-reset').onclick = resetForm;
+
+// Manage: list + edit + delete
+async function refreshPostList() {
+  const listEl = document.getElementById('post-list');
+  if (!state.token) { listEl.innerHTML = '<p class="hint">Connect a GitHub token in Settings first.</p>'; return; }
+  listEl.innerHTML = '<p class="hint">Loading...</p>';
+  try {
+    const url = 'https://api.github.com/repos/' + state.owner + '/' + state.repo + '/contents/_posts?ref=' + state.branch;
+    const res = await fetch(url, { headers: ghHeaders() });
+    if (!res.ok) throw new Error('GitHub error ' + res.status);
+    const files = (await res.json()).filter(f => f.name.endsWith('.md')).sort((a, b) => b.name.localeCompare(a.name));
+    listEl.innerHTML = '';
+    files.forEach(f => {
+      const row = document.createElement('div');
+      row.className = 'post-list-item';
+      row.innerHTML = '<div><div class="t">' + f.name + '</div></div><div class="actions">' +
+        '<button class="btn ghost small" data-a="edit">Edit</button>' +
+        '<button class="btn ghost small" data-a="delete">Delete</button></div>';
+      row.querySelector('[data-a=edit]').onclick = () => loadPostForEdit(f.path);
+      row.querySelector('[data-a=delete]').onclick = () => deletePost(f.path, f.sha, f.name);
+      listEl.appendChild(row);
+    });
+    if (!files.length) listEl.innerHTML = '<p class="hint">No posts yet.</p>';
+  } catch (err) {
+    listEl.innerHTML = '<p class="hint">Failed to load: ' + err.message + '</p>';
+  }
+}
+document.getElementById('btn-refresh-posts').onclick = refreshPostList;
+
+function parseFrontMatter(raw) {
+  const m = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!m) return { front: {}, body: raw };
+  const lines = m[1].split('\n');
+  const front = {}; let body = m[2] || '';
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const kv = line.match(/^([a-z_]+):\s*(.*)$/i);
+    if (kv) {
+      const key = kv[1]; let val = kv[2].trim();
+      if (val === '') {
+        // block list (gallery / buy_links)
+        const items = [];
+        i++;
+        while (i < lines.length && /^\s*-\s/.test(lines[i])) {
+          const item = {};
+          const firstLine = lines[i].replace(/^\s*-\s*/, '');
+          const fm = firstLine.match(/^([a-z_]+):\s*(.*)$/i);
+          if (fm) item[fm[1]] = stripQuotes(fm[2]);
+          i++;
+          while (i < lines.length && /^\s{4}[a-z_]+:/i.test(lines[i])) {
+            const sm = lines[i].trim().match(/^([a-z_]+):\s*(.*)$/i);
+            if (sm) item[sm[1]] = stripQuotes(sm[2]);
+            i++;
+          }
+          items.push(item);
+        }
+        front[key] = items;
+        continue;
+      } else if (val.startsWith('[') && val.endsWith(']')) {
+        front[key] = val.slice(1, -1).split(',').map(s => stripQuotes(s.trim())).filter(Boolean);
+      } else {
+        front[key] = stripQuotes(val);
+      }
+    }
+    i++;
+  }
+  body = body.replace(/\n\n\*This post may contain affiliate links[\s\S]*$/, '').trim();
+  return { front, body };
+}
+function stripQuotes(s) { return s.replace(/^"(.*)"$/, '$1').replace(/\\"/g, '"'); }
+
+async function loadPostForEdit(path) {
+  try {
+    const file = await ghGetFile(path);
+    const raw = decodeURIComponent(escape(atob(file.content)));
+    const { front, body } = parseFrontMatter(raw);
+
+    setView('view-new');
+    document.querySelectorAll('header nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('nav-new').classList.add('active');
+    document.getElementById('form-heading').textContent = 'Edit post';
+    document.getElementById('edit-sha').value = file.sha;
+    document.getElementById('edit-path').value = path;
+
+    document.getElementById('f-title').value = front.title || '';
+    document.getElementById('f-category').value = (front.categories && front.categories[0]) || 'release-dates';
+    document.getElementById('f-tags').value = (front.tags || []).join(', ');
+    document.getElementById('f-sku').value = front.sku || '';
+    document.getElementById('f-price').value = front.price || '';
+    document.getElementById('f-date').value = front.date || '';
+    document.getElementById('f-release-date').value = front.release_date || '';
+    document.getElementById('f-body').value = body;
+
+    state.photos = (front.gallery || []).map(g => ({
+      file: null, name: g.image, dataUrl: rawUrl(g.image), alt: g.alt || '', existingPath: g.image
+    }));
+    renderPhotoGrid();
+
+    document.getElementById('retailer-list').innerHTML = '';
+    (front.buy_links || []).forEach(l => addRetailerRow(l.name, l.url, l.status));
+    if (!(front.buy_links || []).length) resetRetailers();
+  } catch (err) {
+    showMsg('err', 'Failed to load post: ' + err.message);
+  }
+}
+function rawUrl(path) {
+  const p = path.startsWith('/') ? path.slice(1) : path;
+  return 'https://raw.githubusercontent.com/' + state.owner + '/' + state.repo + '/' + state.branch + '/' + p;
+}
+
+async function deletePost(path, sha, name) {
+  if (!confirm('Delete ' + name + '? This cannot be undone.')) return;
+  try {
+    await ghDeleteFile(path, sha, 'Delete post: ' + name);
+    showMsg('ok', 'Deleted ' + name + '.');
+    refreshPostList();
+  } catch (err) {
+    showMsg('err', 'Failed to delete: ' + err.message);
+  }
+}
+
+// init
+loadSettings();
+resetRetailers();
+document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
+</script>
+</body>
+</html>

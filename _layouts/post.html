@@ -10,8 +10,61 @@ layout: default
 </div>
 
 <div class="wrap">
-  <article class="post-content">
-    {{ content }}
-  </article>
+
+  {% if page.buy_links %}
+  <details class="buy-mobile">
+    <summary>
+      <span class="buy-mobile-meta">{% if page.release_date %}Releases {{ page.release_date }}{% endif %}{% if page.price %} &middot; {{ page.price }}{% endif %}</span>
+      <span class="buy-mobile-cta">Where to buy</span>
+    </summary>
+    {% include buy-sidebar.html %}
+  </details>
+  {% endif %}
+
+  <div class="post-layout{% unless page.buy_links %} post-layout--full{% endunless %}">
+    <article class="post-content">
+
+      {% if page.gallery %}
+      <div class="post-gallery">
+        <div class="post-gallery-hero">
+          <img id="gallery-hero" src="{{ page.gallery[0].image | relative_url }}" alt="{{ page.gallery[0].alt | default: page.title }}">
+        </div>
+        {% if page.gallery.size > 1 %}
+        <div class="post-gallery-thumbs">
+          {% for shot in page.gallery %}
+          <button type="button" class="thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ shot.image | relative_url }}" data-alt="{{ shot.alt | default: page.title }}" aria-label="View photo {{ forloop.index }}">
+            <img src="{{ shot.image | relative_url }}" alt="{{ shot.alt | default: page.title }}" loading="lazy">
+          </button>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {{ content }}
+
+    </article>
+
+    {% if page.buy_links %}
+    <aside class="buy-sidebar buy-sidebar--desktop">
+      {% include buy-sidebar.html %}
+    </aside>
+    {% endif %}
+  </div>
+
   <a class="back-link" href="{{ '/' | relative_url }}">&larr; All posts</a>
 </div>
+
+{% if page.gallery and page.gallery.size > 1 %}
+<script>
+document.querySelectorAll('.thumb').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var hero = document.getElementById('gallery-hero');
+    hero.src = btn.dataset.src;
+    hero.alt = btn.dataset.alt;
+    document.querySelectorAll('.thumb').forEach(function (t) { t.classList.remove('is-active'); });
+    btn.classList.add('is-active');
+  });
+});
+</script>
+{% endif %}

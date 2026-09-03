@@ -1,0 +1,24 @@
+{% if page.release_date %}
+<div class="buy-label">Release date</div>
+<div class="buy-date">{{ page.release_date }}</div>
+<div class="buy-rule"></div>
+{% endif %}
+
+<div class="buy-label buy-label--muted">Where to buy</div>
+<div class="buy-list">
+  {% for link in page.buy_links %}
+  <a class="buy-row" href="{{ link.url | default: '#' }}" target="_blank" rel="nofollow sponsored noopener">
+    <span>{{ link.name }}</span>
+    {% if link.status %}<span class="buy-status">{{ link.status }}</span>{% endif %}
+  </a>
+  {% endfor %}
+</div>
+
+{% if page.price %}
+<div class="buy-rule"></div>
+<div class="buy-price-row"><span>Price</span><span>{{ page.price }}</span></div>
+{% endif %}
+
+{% if page.sku %}
+<div class="buy-sku">SKU {{ page.sku }}</div>
+{% endif %}
