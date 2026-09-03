@@ -1,0 +1,21 @@
+---
+layout: default
+---
+
+<div class="wrap" style="padding-top: 48px;">
+  <p class="eyebrow" style="color: var(--flame); font-family: 'Oswald', sans-serif; font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; margin-bottom: 8px;">Section</p>
+  <h1 style="font-family: 'Oswald', sans-serif; font-weight:700; font-size: clamp(32px,5vw,48px); text-transform: uppercase; margin: 0 0 32px;">{{ page.title }}</h1>
+</div>
+
+<ul class="grid">
+  {% assign filtered = site.posts | where_exp: "post", "post.categories contains page.category" %}
+  {% for post in filtered %}
+  <li>
+    <div class="meta">{{ post.categories | first }}<span class="date">{{ post.date | date: "%d.%m.%y" }}</span></div>
+    <div class="title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></div>
+    {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncatewords: 20 }}</p>{% endif %}
+  </li>
+  {% else %}
+  <li style="grid-column: 1 / -1;"><p class="excerpt">No posts here yet — check back soon.</p></li>
+  {% endfor %}
+</ul>

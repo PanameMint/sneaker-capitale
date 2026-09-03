@@ -9,14 +9,28 @@
 </head>
 <body>
 
-  <header class="masthead">
-    <div class="wrap">
-      <p class="eyebrow">Australian Sneaker News</p>
-      <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
-      <p class="tagline">{{ site.description }}</p>
-      <nav>
-        <a href="{{ '/about/' | relative_url }}">About</a>
+  <header class="masthead" style="background-image: url('{{ '/assets/img/hero.jpg' | relative_url }}');">
+    <div class="wrap masthead-row">
+      <nav class="masthead-side">
+        <a class="mark" href="{{ '/' | relative_url }}">S<span>C</span></a>
+        <ul>
+          <li><a href="{{ '/about/' | relative_url }}">About</a></li>
+          <li><a href="{{ '/news/' | relative_url }}">Sneaker News</a></li>
+          <li><a href="{{ '/release-dates/' | relative_url }}">Release Dates</a></li>
+          <li><a href="{{ '/deals/' | relative_url }}">Hot Deals</a></li>
+        </ul>
       </nav>
+
+      <div class="masthead-content">
+        <p class="eyebrow">Australian Sneaker News</p>
+        <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
+        <p class="tagline">{{ site.description }}</p>
+      </div>
+    </div>
+
+    <div class="wrap masthead-foot">
+      <span>{{ site.time | date: '%Y' }}</span>
+      <span class="sc-mark">Sneaker <span>Capitale</span></span>
     </div>
   </header>
 
