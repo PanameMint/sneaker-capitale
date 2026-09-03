@@ -95,6 +95,17 @@
 </head>
 <body>
 
+<div id="lock-screen" style="position:fixed; inset:0; background:#0D0D0D; display:flex; align-items:center; justify-content:center; z-index:999;">
+  <div style="width:280px; text-align:center;">
+    <div style="font-family:'Oswald',sans-serif; font-weight:700; color:#fff; font-size:16px; letter-spacing:1px; margin-bottom:24px;">SNEAKER<span style="color:#FF2A1E;">CAPITALE</span></div>
+    <input type="password" id="lock-input" placeholder="Passphrase" style="width:100%; padding:10px 12px; border-radius:5px; border:1px solid #2A2A2A; background:#1a1a1a; color:#fff; font-size:14px; text-align:center;">
+    <button class="btn primary" id="lock-submit" style="width:100%; margin-top:10px;">Unlock</button>
+    <div id="lock-error" style="color:#F09595; font-size:12px; margin-top:10px; min-height:16px;"></div>
+  </div>
+</div>
+
+<div id="app-root" style="display:none;">
+
 <header>
   <div class="mark">SNEAKER<span>CAPITALE</span> ADMIN</div>
   <nav>
@@ -122,10 +133,16 @@
       <input type="text" id="set-branch" value="main">
       <label>Personal access token</label>
       <input type="password" id="set-token" placeholder="github_pat_...">
+      <p class="hint" style="margin-top:6px;">Use a <strong>fine-grained</strong> token (not classic) scoped to this one repository only, with just Contents: read/write permission, and a real expiration date (e.g. 90 days). Never share it, screenshot it, or paste it anywhere but here.</p>
       <div style="margin-top:16px; display:flex; gap:10px;">
         <button class="btn primary" id="btn-connect">Connect</button>
         <button class="btn ghost" id="btn-disconnect">Disconnect</button>
       </div>
+    </div>
+
+    <div class="card">
+      <h2>Access lock</h2>
+      <p class="hint">This is a passphrase gate on the page itself — a speed bump, not real security (anyone with access to the page source could bypass it). The GitHub token above is what actually protects your site. Set your own passphrase hash below; see the README for how to generate it without ever typing your passphrase anywhere but your own browser console.</p>
     </div>
   </div>
 
@@ -208,6 +225,38 @@
 
 </main>
 
+</div>
+<script>
+// ---- Access lock ----
+// Passphrase hash. Generate your own: open this file in a browser, open devtools console, run:
+//   crypto.subtle.digest('SHA-256', new TextEncoder().encode('your-passphrase')).then(b => console.log(Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('')))
+// then paste the resulting hex string below, replacing PASSPHRASE_HASH. Your passphrase itself never
+// needs to be typed anywhere but your own browser console — it never has to be sent to me or anyone else.
+const PASSPHRASE_HASH = 'REPLACE_WITH_YOUR_OWN_SHA256_HASH';
+
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+async function tryUnlock() {
+  const val = document.getElementById('lock-input').value;
+  const hash = await sha256Hex(val);
+  if (hash === PASSPHRASE_HASH) {
+    sessionStorage.setItem('sc_admin_unlocked', '1');
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('app-root').style.display = 'block';
+  } else {
+    document.getElementById('lock-error').textContent = 'Incorrect passphrase.';
+  }
+}
+document.getElementById('lock-submit').onclick = tryUnlock;
+document.getElementById('lock-input').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+
+if (sessionStorage.getItem('sc_admin_unlocked') === '1') {
+  document.getElementById('lock-screen').style.display = 'none';
+  document.getElementById('app-root').style.display = 'block';
+}
+</script>
 <script>
 const FIXED_RETAILERS = ['Supply Store', 'Up There', 'Finesse'];
 let state = { owner: '', repo: '', branch: 'main', token: '', photos: [] };
