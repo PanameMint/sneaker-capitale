@@ -1,21 +1,11 @@
 title: Sneaker Capitale
 description: Australian sneaker news, release dates, and drops.
-theme: minima
 markdown: kramdown
 permalink: /:year/:month/:day/:title/
-
-# Minima theme settings
-minima:
-  skin: dark
-  social_links:
-    - { platform: instagram, user_url: "https://instagram.com/" }
 
 # Update this once you buy your domain, e.g. sneakercapitale.com.au
 url: ""
 baseurl: ""
-
-header_pages:
-  - about.md
 
 plugins:
   - jekyll-feed

@@ -1,0 +1,18 @@
+---
+layout: default
+---
+
+{{ content }}
+
+<ul class="manifest">
+  {% for post in site.posts %}
+  <li>
+    <span class="date">{{ post.date | date: "%d.%m.%y" }}</span>
+    <div>
+      <div class="title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></div>
+      {% if post.excerpt %}<p class="excerpt">{{ post.excerpt | strip_html | truncatewords: 24 }}</p>{% endif %}
+    </div>
+    <span class="tag">{{ post.categories | first }}</span>
+  </li>
+  {% endfor %}
+</ul>
