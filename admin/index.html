@@ -232,7 +232,7 @@
 //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('your-passphrase')).then(b => console.log(Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('')))
 // then paste the resulting hex string below, replacing PASSPHRASE_HASH. Your passphrase itself never
 // needs to be typed anywhere but your own browser console — it never has to be sent to me or anyone else.
-const PASSPHRASE_HASH = 'REPLACE_WITH_YOUR_OWN_SHA256_HASH';
+const PASSPHRASE_HASH = 'e386c14fad967291881a41df5ff42d005670e37a468e6e4a04c9d900adab398f';
 
 async function sha256Hex(text) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
